@@ -1,42 +1,29 @@
-#———stage1 - jar builder ————-
+#using java, springboot, thymeleaf, mysql database, maven, docker
+FROM maven:3.8.4-openjdk-17 AS base
 
-# Maven image
+# Set the working directory in the container
+WORKDIR /app
 
-FROM maven:3.8.3-openjdk-17 AS builder 
+# Copy the pom.xml and source code into the container
+COPY pom.xml .
 
-# Set working directory
+COPY . /app
+# Download dependencies
+RUN apk add --no-cache maven && \
+    mvn dependency:go-offline
+
+# Download the pom.xml
+RUN mvn clean package -DskipTests
+
+#-----------------------------------------------------#
+
+FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-# Copy source code from local to container
-
-COPY . /app
-
-# Build application and skip test cases
-
-#EXPOSE 8080
-
-RUN mvn clean install -DskipTests=true
-
-#ENTRYPOINT ["java", "-jar", "/expenseapp.jar"]
-
-#--------------------------------------
-# Stage 2 - app build
-#--------------------------------------
-
-# Import small size java image
-
-FROM openjdk:17-alpine
-
-WORKDIR /app 
-
-# Copy build from stage 1 (builder)
-
-COPY --from=builder /app/target/*.jar /app/target/expenseapp.jar
-
-# Expose application port 
+COPY --from=base /app/target/*.jar /app/target/expenseapp.jar
+COPY --from=base /app/deps /app/lib
 
 EXPOSE 8080
 
-# Start the application
 ENTRYPOINT ["java", "-jar", "/app/target/expenseapp.jar"]
