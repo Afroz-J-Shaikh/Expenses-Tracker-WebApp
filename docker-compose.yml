@@ -25,7 +25,7 @@ services:
     image: expense-app:latest
     container_name: "expense-app"
     environment:
-      SPRING.DATASOURCE.URL: "jdbc:mysql://mysql:3306/expenses_tracker?AllowPublicKeyRetrieval=true&useSSL=false"
+      SPRING.DATASOURCE.URL: "jdbc:mysql://mysql:3306/expenses_tracker?allowPublicKeyRetrieval=true&useSSL=false"
       SPRING.DATASOURCE.USERNAME: root
       SPRING.DATASOURCE.PASSWORD: Test@123
 
