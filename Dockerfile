@@ -8,9 +8,6 @@ WORKDIR /app
 COPY pom.xml .
 
 COPY . /app
-# Download dependencies
-RUN apk add --no-cache maven && \
-    mvn dependency:go-offline
 
 # Download the pom.xml
 RUN mvn clean package -DskipTests
