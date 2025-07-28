@@ -19,7 +19,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 COPY --from=base /app/target/*.jar /app/target/expenseapp.jar
-COPY --from=base /app/deps /app/lib
+COPY --from=base /app/lib /app/lib
 
 EXPOSE 8080
 
